@@ -4,7 +4,11 @@ export default function RegisterPage({ navigate }) {
   const [form, setForm] = useState({ student_id: '', name: '', email: '', course: '', year_level: '', password: '', confirm: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  const handleChange = (k) => (e) => {
+    setForm(f => ({ ...f, [k]: e.target.value }));
+    setError('');
+  };
 
   const handleRegister = () => {
     if (!form.name || !form.email || !form.password || !form.student_id) { setError('Please fill all required fields.'); return; }
@@ -12,11 +16,6 @@ export default function RegisterPage({ navigate }) {
     setLoading(true);
     setTimeout(() => { setLoading(false); navigate('dashboard'); }, 1000);
   };
-
-  const Field = ({ placeholder, fkey, type = 'text' }) => (
-    <input className="input-field" placeholder={placeholder} type={type}
-      value={form[fkey]} onChange={e => { set(fkey, e.target.value); setError(''); }} />
-  );
 
   return (
     <div style={{
@@ -32,13 +31,13 @@ export default function RegisterPage({ navigate }) {
 
         {error && <p style={{ color: '#FFD0D0', fontSize: 13, marginBottom: 12, textAlign: 'center' }}>{error}</p>}
 
-        <Field placeholder="Student ID (e.g. 2026-00142)" fkey="student_id" />
-        <Field placeholder="Full Name" fkey="name" />
-        <Field placeholder="Email Address" fkey="email" type="email" />
-        <Field placeholder="Course (e.g. BS Computer Science)" fkey="course" />
-        <Field placeholder="Year Level (e.g. 1st Year)" fkey="year_level" />
-        <Field placeholder="Password" fkey="password" type="password" />
-        <Field placeholder="Confirm Password" fkey="confirm" type="password" />
+        <input className="input-field" placeholder="Student ID (e.g. 2026-00142)" value={form.student_id} onChange={handleChange('student_id')} />
+        <input className="input-field" placeholder="Full Name" value={form.name} onChange={handleChange('name')} />
+        <input className="input-field" placeholder="Email Address" type="email" value={form.email} onChange={handleChange('email')} />
+        <input className="input-field" placeholder="Course (e.g. BS Computer Science)" value={form.course} onChange={handleChange('course')} />
+        <input className="input-field" placeholder="Year Level (e.g. 1st Year)" value={form.year_level} onChange={handleChange('year_level')} />
+        <input className="input-field" placeholder="Password" type="password" value={form.password} onChange={handleChange('password')} />
+        <input className="input-field" placeholder="Confirm Password" type="password" value={form.confirm} onChange={handleChange('confirm')} />
 
         <button className="btn-ghost" style={{ marginTop: 8 }} onClick={handleRegister} disabled={loading}>
           {loading ? 'Creating account...' : 'Register'}
