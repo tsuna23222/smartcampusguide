@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function RegisterPage({ navigate }) {
+export default function RegisterPage({ navigate, setCurrentUser }) {
   const [form, setForm] = useState({ student_id: '', name: '', email: '', course: '', year_level: '', password: '', confirm: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -14,7 +14,17 @@ export default function RegisterPage({ navigate }) {
     if (!form.name || !form.email || !form.password || !form.student_id) { setError('Please fill all required fields.'); return; }
     if (form.password !== form.confirm) { setError('Passwords do not match.'); return; }
     setLoading(true);
-    setTimeout(() => { setLoading(false); navigate('dashboard'); }, 1000);
+    setTimeout(() => {
+      setCurrentUser({
+        student_id: form.student_id,
+        name: form.name,
+        email: form.email,
+        course: form.course || 'General',
+        year_level: form.year_level || '1st Year',
+      });
+      setLoading(false);
+      navigate('dashboard');
+    }, 1000);
   };
 
   return (

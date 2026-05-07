@@ -13,20 +13,20 @@ function greeting() {
   return 'Good Evening';
 }
 
-export default function DashboardPage({ navigate }) {
+export default function DashboardPage({ navigate, currentUser }) {
+  const student = currentUser || mockStudent;
   const next = todayClasses[0];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: '#F4F6F5' }}>
-      {/* Header */}
       <div className="teal-header" style={{ paddingBottom: 32 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
             <p className="header-greeting">{greeting()},</p>
-            <p className="header-name">{mockStudent.name}</p>
+            <p className="header-name">{student.name}</p>
             <div className="badge-row">
-              <span className="badge badge-white">{mockStudent.year_level}</span>
-              <span className="badge badge-white">{mockStudent.course}</span>
+              <span className="badge badge-white">{student.year_level}</span>
+              <span className="badge badge-white">{student.course}</span>
             </div>
           </div>
           <div style={{
@@ -38,7 +38,6 @@ export default function DashboardPage({ navigate }) {
       </div>
 
       <div className="page-content">
-        {/* Up next card */}
         {next && (
           <div className="card fade-up" style={{ marginTop: -16, borderLeft: '4px solid #008B74' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
@@ -77,7 +76,6 @@ export default function DashboardPage({ navigate }) {
           </div>
         ))}
 
-        {/* Quick links */}
         <p className="section-title" style={{ marginTop: 8 }}>Quick Access</p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
           {[

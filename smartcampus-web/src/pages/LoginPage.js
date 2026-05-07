@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { mockStudent } from '../data/mockData';
 
-export default function LoginPage({ navigate }) {
+export default function LoginPage({ navigate, setCurrentUser }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -10,6 +11,7 @@ export default function LoginPage({ navigate }) {
     if (!email || !password) { setError('Please enter email and password.'); return; }
     setLoading(true);
     setTimeout(() => {
+      setCurrentUser(mockStudent);
       setLoading(false);
       navigate('dashboard');
     }, 1000);
@@ -40,7 +42,7 @@ export default function LoginPage({ navigate }) {
         <input className="input-field" placeholder="Enter Password" type="password"
           value={password} onChange={e => { setPassword(e.target.value); setError(''); }} />
 
-        <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 13, marginBottom: 20, cursor: 'pointer', alignSelf: 'center' }}>
+        <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 13, marginBottom: 20, cursor: 'pointer' }}>
           Forgot password?
         </p>
 

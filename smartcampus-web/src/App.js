@@ -12,6 +12,7 @@ import './App.css';
 export default function App() {
   const [page, setPage] = useState('splash');
   const [mapRoom, setMapRoom] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const navigate = (to, params = null) => {
     if (to === 'map' && params) setMapRoom(params);
@@ -19,7 +20,7 @@ export default function App() {
     setPage(to);
   };
 
-  const props = { navigate, mapRoom };
+  const props = { navigate, mapRoom, currentUser, setCurrentUser };
 
   return (
     <div className="app-shell">

@@ -2,7 +2,9 @@ import React from 'react';
 import BottomNav from '../components/BottomNav';
 import { mockStudent } from '../data/mockData';
 
-export default function ProfilePage({ navigate }) {
+export default function ProfilePage({ navigate, currentUser }) {
+  const student = currentUser || mockStudent;
+
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to logout?')) navigate('splash');
   };
@@ -26,8 +28,8 @@ export default function ProfilePage({ navigate }) {
             alignItems: 'center', justifyContent: 'center', fontSize: 30, flexShrink: 0
           }}>👤</div>
           <div>
-            <p style={{ color: 'white', fontSize: 20, fontWeight: 700, fontFamily: 'Sora, sans-serif' }}>{mockStudent.name}</p>
-            <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, marginTop: 3 }}>Student ID: {mockStudent.student_id}</p>
+            <p style={{ color: 'white', fontSize: 20, fontWeight: 700, fontFamily: 'Sora, sans-serif' }}>{student.name}</p>
+            <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, marginTop: 3 }}>Student ID: {student.student_id}</p>
           </div>
         </div>
       </div>
@@ -35,9 +37,9 @@ export default function ProfilePage({ navigate }) {
       <div className="page-content">
         <div className="card fade-up">
           <p style={{ fontSize: 11, color: '#999', letterSpacing: 0.8, marginBottom: 8, textTransform: 'uppercase' }}>Student Info</p>
-          <Row label="Course" value={mockStudent.course} />
-          <Row label="Year Level" value={mockStudent.year_level} />
-          <Row label="Email" value={mockStudent.email} />
+          <Row label="Course" value={student.course} />
+          <Row label="Year Level" value={student.year_level} />
+          <Row label="Email" value={student.email} />
           <Row label="Status" value="Enrolled" badge />
         </div>
 
