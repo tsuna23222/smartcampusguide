@@ -9,6 +9,7 @@ import NotificationsPage from './pages/NotificationsPage';
 import ProfilePage from './pages/ProfilePage';
 import PendingPage from './pages/PendingPage';
 import AdminPage from './pages/AdminPage';
+import Chatbot from './components/Chatbot';
 import './App.css';
 
 export default function App() {
@@ -30,6 +31,8 @@ export default function App() {
 
   const props = { navigate, mapRoom, currentUser, setCurrentUser, logout };
 
+  const showChatbot = ['dashboard', 'schedule', 'map', 'notifications', 'profile'].includes(page);
+
   return (
     <div className="app-shell">
       {page === 'splash' && <SplashPage {...props} />}
@@ -42,6 +45,7 @@ export default function App() {
       {page === 'notifications' && <NotificationsPage {...props} />}
       {page === 'profile' && <ProfilePage {...props} />}
       {page === 'admin' && <AdminPage {...props} />}
+      {showChatbot && <Chatbot />}
     </div>
   );
 }
