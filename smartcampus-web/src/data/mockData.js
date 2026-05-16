@@ -1,7 +1,4 @@
 // Backend API URL - update this after deploying to Render.com
-export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-
-
 export const mockStudent = {
   student_id: "2026-00142",
   name: "Alex Carlsoon",
@@ -10,6 +7,7 @@ export const mockStudent = {
   year_level: "1st Year",
 };
 
+export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 export const mockSchedule = {
   Monday: [
     { subject_id: "CS101", subject_name: "Introduction to Programming", instructor: "Prof. Santos", time: "09:00 AM – 10:30 AM", room: "530", building: "Science & Tech Building", floor: "5th" },
