@@ -50,23 +50,17 @@ export default function Chatbot() {
     setLoading(true);
 
     try {
-      const conversationHistory = messages
-        .filter(m => m.role !== 'bot' || messages.indexOf(m) > 0)
-        .map(m => ({
-          role: m.role === 'user' ? 'user' : 'model',
-          parts: [{ text: m.text }]
-        }));
-
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            system_instruction: { parts: [{ text: SYSTEM_CONTEXT }] },
             contents: [
-              ...conversationHistory,
-              { role: 'user', parts: [{ text: userMsg }] }
+              {
+                role: 'user',
+                parts: [{ text: SYSTEM_CONTEXT + '\n\nStudent question: ' + userMsg }]
+              }
             ],
             generationConfig: { maxOutputTokens: 300, temperature: 0.7 }
           })
@@ -74,9 +68,9 @@ export default function Chatbot() {
       );
 
       const data = await response.json();
-      const botReply = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I could not understand that. Please try again!';
+      const botReply = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I could not process that. Please try again!';
       setMessages(prev => [...prev, { role: 'bot', text: botReply }]);
-    } catch {
+    } catch (err) {
       setMessages(prev => [...prev, { role: 'bot', text: 'Sorry, I\'m having trouble connecting. Please try again later!' }]);
     }
 
@@ -131,7 +125,7 @@ export default function Chatbot() {
             }}>🤖</div>
             <div>
               <p style={{ color: 'white', fontWeight: 700, fontSize: 14 }}>CampusBot</p>
-              <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 11 }}>● Online · Powered by Gemini AI</p>
+              <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 11 }}>● Online · Powered by SmartCampus</p>
             </div>
           </div>
 
@@ -170,12 +164,11 @@ export default function Chatbot() {
               <div style={{ marginTop: 4, marginBottom: 8 }}>
                 <p style={{ fontSize: 11, color: '#999', marginBottom: 6 }}>Quick questions:</p>
                 {quickQuestions.map((q, i) => (
-                  <button key={i} onClick={() => { setInput(q); }} style={{
+                  <button key={i} onClick={() => setInput(q)} style={{
                     display: 'block', width: '100%', textAlign: 'left',
                     background: '#E1F5EE', color: '#008B74', border: 'none',
                     borderRadius: 12, padding: '7px 12px', marginBottom: 5,
                     fontSize: 12, cursor: 'pointer', fontFamily: 'DM Sans, sans-serif',
-                    transition: 'background 0.15s'
                   }}>
                     {q}
                   </button>
@@ -200,7 +193,8 @@ export default function Chatbot() {
               }}
             />
             <button onClick={sendMessage} disabled={loading || !input.trim()} style={{
-              width: 36, height: 36, borderRadius: '50%', background: input.trim() ? '#008B74' : '#E0E0E0',
+              width: 36, height: 36, borderRadius: '50%',
+              background: input.trim() ? '#008B74' : '#E0E0E0',
               border: 'none', cursor: input.trim() ? 'pointer' : 'default',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 16, transition: 'background 0.2s', flexShrink: 0
