@@ -1,6 +1,5 @@
 import React from 'react';
 import BottomNav from '../components/BottomNav';
-import { mockStudent } from '../data/mockData';
 
 export default function ProfilePage({ navigate, currentUser }) {
   const student = currentUser || mockStudent;

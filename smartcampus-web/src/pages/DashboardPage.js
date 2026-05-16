@@ -1,6 +1,6 @@
 import React from 'react';
 import BottomNav from '../components/BottomNav';
-import { mockStudent, mockSchedule } from '../data/mockData';
+import { mockSchedule } from '../data/mockData';
 
 const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const today = days[new Date().getDay()] in mockSchedule ? days[new Date().getDay()] : 'Monday';
