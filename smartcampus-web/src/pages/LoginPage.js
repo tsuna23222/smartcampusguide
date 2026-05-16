@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { mockStudent } from '../data/mockData';
+import { api } from '../services/api';
 
 export default function LoginPage({ navigate, setCurrentUser }) {
   const [email, setEmail] = useState('');
@@ -7,21 +7,39 @@ export default function LoginPage({ navigate, setCurrentUser }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) { setError('Please enter email and password.'); return; }
     setLoading(true);
-    setTimeout(() => {
-      setCurrentUser(mockStudent);
-      setLoading(false);
-      navigate('dashboard');
-    }, 1000);
+    try {
+      const data = await api.login(email, password);
+      if (!data.success) { setError(data.message || 'Invalid credentials'); setLoading(false); return; }
+
+      localStorage.setItem('token', data.token);
+      setCurrentUser(data.student);
+
+      // Route based on role and status
+      if (data.student.role === 'admin') {
+        navigate('admin');
+      } else if (data.student.status === 'verified') {
+        navigate('dashboard');
+      } else if (data.student.status === 'rejected') {
+        setError('Your account has been rejected. Please contact the registrar.');
+        setLoading(false);
+        return;
+      } else {
+        navigate('pending');
+      }
+    } catch {
+      setError('Cannot connect to server. Please try again.');
+    }
+    setLoading(false);
   };
 
   return (
     <div style={{
       minHeight: '100vh', background: 'linear-gradient(160deg, #008B74 0%, #005C4E 100%)',
       display: 'flex', flexDirection: 'column', alignItems: 'center',
-      justifyContent: 'center', padding: '32px 28px', overflow: 'hidden', position: 'relative'
+      justifyContent: 'center', padding: '32px 28px', position: 'relative',
     }}>
       <div style={{ position: 'absolute', top: -40, right: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
 
@@ -35,16 +53,14 @@ export default function LoginPage({ navigate, setCurrentUser }) {
         <h2 style={{ fontFamily: 'Sora, sans-serif', color: 'white', fontSize: 24, fontWeight: 700, marginBottom: 4 }}>Welcome back</h2>
         <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14, marginBottom: 28 }}>Sign in to your account</p>
 
-        {error && <p style={{ color: '#FFD0D0', fontSize: 13, marginBottom: 12, textAlign: 'center' }}>{error}</p>}
+        {error && <p style={{ color: '#FFD0D0', fontSize: 13, marginBottom: 12, textAlign: 'center', background: 'rgba(255,0,0,0.15)', padding: '8px 16px', borderRadius: 12, width: '100%' }}>{error}</p>}
 
         <input className="input-field" placeholder="Enter your Email" type="email"
           value={email} onChange={e => { setEmail(e.target.value); setError(''); }} />
         <input className="input-field" placeholder="Enter Password" type="password"
           value={password} onChange={e => { setPassword(e.target.value); setError(''); }} />
 
-        <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 13, marginBottom: 20, cursor: 'pointer' }}>
-          Forgot password?
-        </p>
+        <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 13, marginBottom: 20, cursor: 'pointer' }}>Forgot password?</p>
 
         <button className="btn-ghost" onClick={handleLogin} disabled={loading}>
           {loading ? 'Signing in...' : 'Login'}
@@ -53,9 +69,7 @@ export default function LoginPage({ navigate, setCurrentUser }) {
         <p className="link-text" onClick={() => navigate('register')}>
           Don't have an account? <u>Sign Up</u>
         </p>
-        <p className="link-text" style={{ opacity: 0.6, marginTop: 8 }} onClick={() => navigate('splash')}>
-          ← Back
-        </p>
+        <p className="link-text" style={{ opacity: 0.6, marginTop: 8 }} onClick={() => navigate('splash')}>← Back</p>
       </div>
     </div>
   );

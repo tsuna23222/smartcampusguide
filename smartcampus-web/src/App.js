@@ -7,6 +7,8 @@ import SchedulePage from './pages/SchedulePage';
 import MapPage from './pages/MapPage';
 import NotificationsPage from './pages/NotificationsPage';
 import ProfilePage from './pages/ProfilePage';
+import PendingPage from './pages/PendingPage';
+import AdminPage from './pages/AdminPage';
 import './App.css';
 
 export default function App() {
@@ -20,18 +22,26 @@ export default function App() {
     setPage(to);
   };
 
-  const props = { navigate, mapRoom, currentUser, setCurrentUser };
+  const logout = () => {
+    localStorage.removeItem('token');
+    setCurrentUser(null);
+    navigate('splash');
+  };
+
+  const props = { navigate, mapRoom, currentUser, setCurrentUser, logout };
 
   return (
     <div className="app-shell">
       {page === 'splash' && <SplashPage {...props} />}
       {page === 'login' && <LoginPage {...props} />}
       {page === 'register' && <RegisterPage {...props} />}
+      {page === 'pending' && <PendingPage {...props} />}
       {page === 'dashboard' && <DashboardPage {...props} />}
       {page === 'schedule' && <SchedulePage {...props} />}
       {page === 'map' && <MapPage {...props} />}
       {page === 'notifications' && <NotificationsPage {...props} />}
       {page === 'profile' && <ProfilePage {...props} />}
+      {page === 'admin' && <AdminPage {...props} />}
     </div>
   );
 }
